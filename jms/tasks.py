@@ -7,6 +7,8 @@ try:
 except ImportError:
     from queue import Queue, Empty
 
+logging.info('Using hxt jms sdk now.')
+
 
 class QueueMultiMixin(object):
     def mget(self, size=1, block=True, timeout=5):
