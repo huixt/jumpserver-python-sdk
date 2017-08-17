@@ -1,6 +1,7 @@
 # ~*~ coding: utf-8 ~*~
-import threading
 import logging
+import threading
+
 try:
     from Queue import Queue, Empty
 except ImportError:
@@ -32,10 +33,14 @@ class Task(object):
 
     def handler(self):
         while True:
-            data = self.queue.mget(size=self.batch_count)
-            if data:
-                logging.debug('Sending data: %s' % data)
-                self.action(data)
+            try:
+                data = self.queue.mget(size=self.batch_count)
+                if data:
+                    logging.debug('Sending data: %s' % data)
+                    self.action(data)
+            except Exception as e:
+                logging.error('Sending data exception occured')
+                logging.exception(e)
 
     def run(self):
         threads = []
@@ -46,39 +51,39 @@ class Task(object):
             t.start()
 
 
-# class CommandTask(object):
-#     size = 10
-#
-#     def handler(self):
-#         while True:
-#             data = command_queue.mget(size=self.size)
-#             if data:
-#                 service.send_command_log(data)
-#
-#     def run(self, threads_count=2):
-#         threads = []
-#         for i in range(threads_count):
-#             t = threading.Thread(target=self.handler)
-#             t.daemon = True
-#             t.start()
-#         for t in threads:
-#             t.join()
-#
-#
-# class RecordTask(object):
-#     size = 10
-#
-#     def handler(self):
-#         while True:
-#             data = record_queue.mget(size=self.size)
-#             if data:
-#                 service.send_record_log(data)
-#
-#     def run(self, threads_count=2):
-#         threads = []
-#         for i in range(threads_count):
-#             t = threading.Thread(target=self.handler)
-#             t.daemon = True
-#             t.start()
-#         for t in threads:
-#             t.join()
+            # class CommandTask(object):
+            #     size = 10
+            #
+            #     def handler(self):
+            #         while True:
+            #             data = command_queue.mget(size=self.size)
+            #             if data:
+            #                 service.send_command_log(data)
+            #
+            #     def run(self, threads_count=2):
+            #         threads = []
+            #         for i in range(threads_count):
+            #             t = threading.Thread(target=self.handler)
+            #             t.daemon = True
+            #             t.start()
+            #         for t in threads:
+            #             t.join()
+            #
+            #
+            # class RecordTask(object):
+            #     size = 10
+            #
+            #     def handler(self):
+            #         while True:
+            #             data = record_queue.mget(size=self.size)
+            #             if data:
+            #                 service.send_record_log(data)
+            #
+            #     def run(self, threads_count=2):
+            #         threads = []
+            #         for i in range(threads_count):
+            #             t = threading.Thread(target=self.handler)
+            #             t.daemon = True
+            #             t.start()
+            #         for t in threads:
+            #             t.join()
