@@ -36,7 +36,7 @@ class Task(object):
             try:
                 data = self.queue.mget(size=self.batch_count)
                 if data:
-                    logging.debug('hxt Sending data: %s' % data)
+                    logging.info('hxt Sending data: %s' % data)
                     self.action(data)
             except Exception as e:
                 logging.error('Sending data exception occured')
