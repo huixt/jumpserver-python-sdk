@@ -7,8 +7,6 @@ try:
 except ImportError:
     from queue import Queue, Empty
 
-logging.info('Using hxt jms sdk now.')
-
 
 class QueueMultiMixin(object):
     def mget(self, size=1, block=True, timeout=5):
@@ -38,7 +36,7 @@ class Task(object):
             try:
                 data = self.queue.mget(size=self.batch_count)
                 if data:
-                    logging.debug('Sending data: %s' % data)
+                    logging.debug('hxt Sending data: %s' % data)
                     self.action(data)
             except Exception as e:
                 logging.error('Sending data exception occured')
