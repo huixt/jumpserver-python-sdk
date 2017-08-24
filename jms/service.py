@@ -24,6 +24,9 @@ from .utils import sort_assets, PKey, to_dotmap, timestamp_to_datetime_str
 from .exceptions import RequestError, LoadAccessKeyError
 from .config import API_URL_MAPPING
 
+import logging
+
+log = logging.getLogger(__file__)
 
 _USER_AGENT = 'jms-sdk-py'
 CACHED_TTL = os.environ.get('CACHED_TTL', 30)
@@ -443,6 +446,7 @@ class UserService(ApiRequest):
         }
         """
         r, content = self.post('user-auth', data=data, use_auth=False)
+        log.info('log result: r.status_code=%s, content=%s, data=%s', r.status_code, content, data)
         if r.status_code == 200:
             self.token = content['token']
             self.user = content['user']
